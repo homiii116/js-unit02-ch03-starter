@@ -1,3 +1,5 @@
+import { response } from "express";
+
 const endpoint = "http://localhost:3000"
 
 function handleClick(e) {
@@ -33,6 +35,13 @@ function getData() {
     成功ならpropertyDataをPromise.resolveで返します。
     失敗ならエラーメッセージをPromise.rejectで返します。
   */
+  return fetchData().then((res) => {
+    if (res.status) {
+    return Promise.resolve(res.JSON);
+    } else {
+      return Promise.reject(res.message);
+    }
+  });
 }
 
 
@@ -41,11 +50,23 @@ function fetchData() {
   /* 
     fetchを使ってデータを取得します。
   */
+  return new Promise((resolve, reject) => {
+    const response = fetch(url, {method: "GET"})
+    if(response.ok) {
+      resolve({
+        status: true,
+        propertyData: propertyData
+      });
+    } else {
+      reject({
+        status: false,
+        message: 'データの取得に失敗しました。'
+      });
+    } 
+  });
 }
 
 {
   const button1 = document.getElementById('button1');
   button1.addEventListener("click", handleClick);
 }
-
-// 変更
