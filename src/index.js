@@ -1,4 +1,3 @@
-import { response } from "express";
 
 const endpoint = "http://localhost:3000"
 
@@ -35,35 +34,32 @@ function getData() {
     成功ならpropertyDataをPromise.resolveで返します。
     失敗ならエラーメッセージをPromise.rejectで返します。
   */
-  return fetchData().then((res) => {
-    if (res.status) {
-    return Promise.resolve(res.JSON);
+  JSON.parse(propertyData); 
+  return fetchData(1).then((res) => {  
+    if (res.status === 200) {
+    return Promise.resolve(json.res);     
     } else {
-      return Promise.reject(res.message);
+      return Promise.reject(json.error);
     }
   });
 }
 
 
-function fetchData() {
-  const url = `${endpoint}/properties/1`
+function fetchData(id = 1) {
+  const url = `${endpoint}/properties/${id}`
   /* 
     fetchを使ってデータを取得します。
   */
-  return new Promise((resolve, reject) => {
-    const response = fetch(url, {method: "GET"})
-    if(response.ok) {
-      resolve({
-        status: true,
-        propertyData: propertyData
-      });
-    } else {
-      reject({
-        status: false,
-        message: 'データの取得に失敗しました。'
-      });
-    } 
-  });
+  fetch(url, {
+    method: "GET",
+    mode: 'cors',
+    cache: 'default',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
+    
 }
 
 {
