@@ -34,8 +34,8 @@ function getData() {
     成功ならpropertyDataをPromise.resolveで返します。
     失敗ならエラーメッセージをPromise.rejectで返します。
   */  
-  return fetchData().then((response) => {
-    const json = response.json(); 
+  return fetchData().then((response) => { 
+    const json = JSON.stringify(propertyData);
     json = JSON.parse(propertyData);
     if (response.status === 403) {
       return Promise.reject(error);     
