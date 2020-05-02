@@ -33,13 +33,14 @@ function getData() {
     fetchDataを呼び出し、responseのステータスを元にデータ取得成功か失敗かを判断しましょう。 
     成功ならpropertyDataをPromise.resolveで返します。
     失敗ならエラーメッセージをPromise.rejectで返します。
-  */
-  JSON.parse(propertyData); 
-  return fetchData(1).then((res) => {  
-    if (res.status === 200) {
-    return Promise.resolve(json.res);     
+  */  
+  return fetchData().then((response) => {
+    const json = response.json(); 
+    json = JSON.parse(propertyData);
+    if (response.status === 403) {
+      return Promise.reject(error);     
     } else {
-      return Promise.reject(json.error);
+      return Promise.resolve(response.json);
     }
   });
 }
@@ -50,7 +51,7 @@ function fetchData(id = 1) {
   /* 
     fetchを使ってデータを取得します。
   */
-  fetch(url, {
+  return fetch(url, {
     method: "GET",
     mode: 'cors',
     cache: 'default',
