@@ -35,16 +35,14 @@ function getData() {
     失敗ならエラーメッセージをPromise.rejectで返します。
   */  
   return fetchData().then((response) => { 
-    const json = JSON.stringify(propertyData);
-    json = JSON.parse(propertyData);
-    if (response.status === 403) {
-      return Promise.reject(error);     
+    const json = response.json();
+    if (response.status !== 200) {
+      return Promise.then(reject(response.message));
     } else {
-      return Promise.resolve(response.json);
+      return Promise.resolve(json);
     }
   });
 }
-
 
 function fetchData(id = 1) {
   const url = `${endpoint}/properties/${id}`
@@ -53,14 +51,11 @@ function fetchData(id = 1) {
   */
   return fetch(url, {
     method: "GET",
-    mode: 'cors',
-    cache: 'default',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     }
-  })
-    
+  })    
 }
 
 {
